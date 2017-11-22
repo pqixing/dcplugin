@@ -12,31 +12,27 @@ import utils.VersionUtils
 
 abstract class BasePlugin implements Plugin<Project> {
     DachenModel model;
+
     @Override
     void apply(Project project) {
-        if(model==null) {
-            model = project.extensions.create("dachen", DachenModel)
-            project.afterEvaluate {
-                println("name :$project.name properties: $project.dachen")
-                apply(project)
-            }
-            return
+        model = project.extensions.create("dachen", DachenModel)
+        project.afterEvaluate {
+            println("name :$project.name properties: $project.dachen")
         }
-
         project.repositories {
             maven {
                 url VersionUtils.getMavenUrl(model.testEnv)
             }
         }
-        applyAndroidVerions(project,model.library)
+        applyAndroidVerions(project, model.library)
 
-        project.task("atest"){
+        project.task("atest") {
             doFirst {
                 println(model)
             }
         }
-        project.apply from : PluginUtils.androidGradlePath(project)
+        project.apply from: PluginUtils.androidGradlePath(project)
     }
 
-    abstract void applyAndroidVerions(Project project,boolean library)
+    abstract void applyAndroidVerions(Project project, boolean library)
 }

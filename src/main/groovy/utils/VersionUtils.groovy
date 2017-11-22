@@ -22,8 +22,8 @@ class VersionUtils{
         ,"targetSdkVersion":"21"
         ,"versionCode":"1"
         ,"versionName":"1.0"
-//        ,"maven_url":getMavenUrl(project.dachen.testEnv)
-        ,"maven_url":'uri("/home/pqixing/.repo")'
+        ,"maven_url":getMavenUrl(project.dachen.testEnv)
+//        ,"maven_url":'uri("/home/pqixing/.repo")'
         ,"artifactId":project.name
         ,"pom_version":project.dachen.pom_version
         ]

@@ -60,7 +60,7 @@ android {
 uploadArchives{
     repositories{
         mavenDeployer{
-            repository(url:#maven_url){
+            repository(url:"#maven_url"){
                 authentication(userName: "admin", password: "admin123")
             }
             pom.groupId = 'com.dachen.android' // 组名
