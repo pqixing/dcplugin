@@ -1,0 +1,28 @@
+// 应用插件
+apply plugin: "groovy"
+apply plugin: "maven"
+
+// 添加依赖
+dependencies{
+    compile gradleApi()
+    compile localGroovy()
+}
+
+// 代码仓库
+repositories{
+    jcenter()
+}
+
+// 上传到本地代码库
+uploadArchives{
+    repositories{
+        mavenDeployer{
+            repository(url:uri("/home/pqixing/.repo")){
+                authentication(userName: "admin", password: "admin123")
+            }
+            pom.groupId = 'com.dachen.android' // 组名
+            pom.artifactId = 'plugin' // 插件名
+            pom.version = '0.0.1' // 版本号
+        }
+    }
+}
