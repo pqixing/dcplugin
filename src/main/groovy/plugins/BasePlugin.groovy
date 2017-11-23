@@ -13,7 +13,7 @@ abstract class BasePlugin implements Plugin<Project> {
 
     @Override
     void apply(Project project) {
-        PluginUtils.addProjectExt(project)
+        addProjectExt(project)
         println("onIn---------------------")
         DachenModel model = project.exts("dachen",new DachenModel())
         println("model = $model")
@@ -30,7 +30,13 @@ abstract class BasePlugin implements Plugin<Project> {
  * 添加获取ext属性的方法
  * @param proj
  */
-
+    void addProjectExt(Project proj){
+        def getExt = { key,value = "" ->
+            return project.hasProperty(key)?project.ext.get(key):value
+        }
+        getExt.delegate = proj
+        proj.ext.exts = getExt
+    }
 
     abstract void applyAndroidVerions(Project project, boolean library)
 }

@@ -39,7 +39,7 @@ class VersionUtils{
  */
      static String updateVersions(Project project,String source){
         initVersions(project).findAll { map->
-            source=source.replace("#${it.key}",it.value)
+            source=source.replace("#${map.key}",project.exts(map.key,map.value))
         }
         return source
     }
