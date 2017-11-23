@@ -1,49 +1,61 @@
 package utils
-
-import model.DachenModel
 import org.gradle.api.Project
-import org.gradle.api.invocation.Gradle
+
 /**
  * 获取版本的工具
  */
 class VersionUtils{
-/**
- * 获取maven仓库的地址
- * @param test 测试环境使用
- * @return
- */
-    static String getMavenUrl(boolean testEnv) {
-        return testEnv ? "http://192.168.3.7:9527/nexus/content/repositories/android-test/"
-                : "http://192.168.3.7:9527/nexus/content/repositories/android/"
-    }
-
-    static def initVersions(Project project){
-       DachenModel model = project.exts("dachen",new DachenModel())
-        def versions = ["compileSdkVersion":model.compileSdkVersion
-        ,"minSdkVersion":model.minSdkVersion
-        ,"targetSdkVersion":model.targetSdkVersion
-        ,"versionCode":model.versionCode
-        ,"versionName":model.versionName
-        ,"maven_url":getMavenUrl(model.testMavenEnv)
-        ,"artifactId":project.name
-        ,"pom_version":model.pom_version
-        ]
-        return versions
-    }
-
 /**
  * 更新文件中的版本号
  * @param project
  * @param source
  * @return
  */
-     static String updateVersions(Project project,String source){
-        initVersions(project).findAll { map->
-            source=source.replace("#${map.key}",project.exts(map.key,map.value))
+    static String updateVersions(Project project,String source){
+        getVersion(project).findAll { map->
+            source=source.replace("#${map.key}",map.value.toString())
         }
         return source
     }
-   static String getVersion(Gradle gradle,String module){
-        return "com.dachen.android:commom:+"
+
+    static String getAndriodTemp(Project project,boolean flavors  = false) {
+        def file = project.file(project.buildDir.absolutePath+File.separator
+                +"outputs"+File.separator+"dachen"+File.separator+"android.gradle")
+        if(file.exists()) file.delete()
+        file.parentFile.mkdirs()
+
+        def tepmletStr = Templet.androidTemplet
+        if(flavors) tepmletStr = tepmletStr.replace('//productFlavorsPosition',Templet.productFlavors)
+        if(project.exts(D.mavenEnable,false)) tepmletStr = tepmletStr.replace('//mavenTemplet',Templet.mavenTemplet)
+
+        tepmletStr = VersionUtils.updateVersions(project, tepmletStr)
+
+
+        BufferedOutputStream out = file.newOutputStream()
+        out.write(tepmletStr.getBytes())
+        out.flush()
+        out.close()
+        def path = file.absolutePath
+        return path
     }
+
+
+    static def getVersion(Project project){
+        def exts = project.exts
+        def versions = [
+                runAlone :exts(D.compileSdkVersion,false)
+                ,testMavenEnv :exts(D.testMavenEnv,true)
+                ,compileSdkVersion :exts(D.compileSdkVersion,"26")
+                ,minSdkVersion:exts(D.minSdkVersion,"16")
+                ,targetSdkVersion:exts(D.targetSdkVersion,"21")
+                ,versionCode:exts(D.versionCode,"1")
+                ,versionName:exts(D.versionName,"1.0")
+                ,maven_url:exts(D.testMavenEnv,true)?D.maven_test:D.maven
+                ,artifactId:project.name
+                ,pom_version:exts(D.pom_version,"0.0.1")
+        ]
+        if(exts(D.printLog,false)) println("all versions = $versions")
+        return versions
+    }
+
 }

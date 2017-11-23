@@ -13,15 +13,6 @@ public class Component{
 
 
 
-
-
-
-
-
-
-
-
-
     static Component create(Closure call){
         def m = new Component()
         call.delegate = m

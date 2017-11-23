@@ -1,6 +1,8 @@
 package plugins
 
 import org.gradle.api.Project
+import utils.*
+
 /**
  * Created by pqixing on 17-11-21.
  */
@@ -12,7 +14,9 @@ class Library extends BasePlugin {
     }
 
     @Override
-    void applyAndroidVerions(Project project, boolean library) {
-        project.apply plugin: library?'com.android.library':'com.android.application'
+    void applyAndroid(Project project) {
+       def runAlone = false
+        project.apply plugin: (runAlone?'com.android.application':'com.android.library')
+        project.apply from : VersionUtils.getAndriodTemp(project,runAlone)
     }
 }
