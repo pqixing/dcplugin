@@ -7,6 +7,15 @@ import org.gradle.api.Project
  */
 
 class PluginUtils {
+    static void addProjectExt(Project proj){
+//        if(proj.hasProperty("exts")) return
+
+        def getExt = { key,value = "" ->
+            return project.hasProperty(key)?project.ext.get(key):value
+        }
+        getExt.delegate = proj
+        proj.ext.exts = getExt
+    }
 
 /**
  * 打印工程的依赖关系图
@@ -19,7 +28,7 @@ class PluginUtils {
 
     static String androidGradlePath(Project project) {
         def file = project.file(project.buildDir.absolutePath+File.separator
-                +"dachen"+File.separator+"out"+File.separator+"android.gradle")
+                +"out"+File.separator+"dachen"+File.separator+"android.gradle")
         if(file.exists()) file.delete()
         file.parentFile.mkdirs()
 

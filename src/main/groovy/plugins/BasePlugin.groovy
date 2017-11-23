@@ -5,34 +5,32 @@ import org.gradle.api.Plugin
 import org.gradle.api.Project
 import utils.PluginUtils
 import utils.VersionUtils
-
 /**
  * Created by pqixing on 17-11-21.
  */
 
 abstract class BasePlugin implements Plugin<Project> {
-    DachenModel model;
 
     @Override
     void apply(Project project) {
-        model = project.extensions.create("dachen", DachenModel)
-        project.afterEvaluate {
-            println("name :$project.name properties: $project.dachen")
-        }
+        PluginUtils.addProjectExt(project)
+        println("onIn---------------------")
+        DachenModel model = project.exts("dachen",new DachenModel())
+        println("model = $model")
         project.repositories {
             maven {
-                url VersionUtils.getMavenUrl(model.testEnv)
+                url VersionUtils.getMavenUrl(model.testMavenEnv)
             }
         }
-        applyAndroidVerions(project, model.library)
 
-        project.task("atest") {
-            doFirst {
-                println(model)
-            }
-        }
+        applyAndroidVerions(project, true)
         project.apply from: PluginUtils.androidGradlePath(project)
     }
+/**
+ * 添加获取ext属性的方法
+ * @param proj
+ */
+
 
     abstract void applyAndroidVerions(Project project, boolean library)
 }

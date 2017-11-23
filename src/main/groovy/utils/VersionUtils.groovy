@@ -1,5 +1,6 @@
 package utils
 
+import model.DachenModel
 import org.gradle.api.Project
 import org.gradle.api.invocation.Gradle
 /**
@@ -17,15 +18,15 @@ class VersionUtils{
     }
 
     static def initVersions(Project project){
-        def versions = ["compileSdkVersion":"26"
-        ,"minSdkVersion":"16"
-        ,"targetSdkVersion":"21"
-        ,"versionCode":"1"
-        ,"versionName":"1.0"
-        ,"maven_url":getMavenUrl(project.dachen.testEnv)
-//        ,"maven_url":'uri("/home/pqixing/.repo")'
+       DachenModel model = project.exts("dachen",new DachenModel())
+        def versions = ["compileSdkVersion":model.compileSdkVersion
+        ,"minSdkVersion":model.minSdkVersion
+        ,"targetSdkVersion":model.targetSdkVersion
+        ,"versionCode":model.versionCode
+        ,"versionName":model.versionName
+        ,"maven_url":getMavenUrl(model.testMavenEnv)
         ,"artifactId":project.name
-        ,"pom_version":project.dachen.pom_version
+        ,"pom_version":model.pom_version
         ]
         return versions
     }
@@ -37,9 +38,8 @@ class VersionUtils{
  * @return
  */
      static String updateVersions(Project project,String source){
-        def ext = project.rootProject.extensions
         initVersions(project).findAll { map->
-            source=source.replace("#${map.key}",ext.hasProperty(map.key)?ext.getByName(map.key):map.value)
+            source=source.replace("#${it.key}",it.value)
         }
         return source
     }
