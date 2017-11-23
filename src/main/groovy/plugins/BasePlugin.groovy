@@ -2,7 +2,8 @@ package plugins
 
 import org.gradle.api.Plugin
 import org.gradle.api.Project
-import utils.*
+import utils.VersionUtils
+
 /**
  * Created by pqixing on 17-11-21.
  */
@@ -14,7 +15,7 @@ abstract class BasePlugin implements Plugin<Project> {
         addProjectExt(project)
         project.repositories {
             maven {
-                url D.maven_url
+                url VersionUtils.getMavenUrl(project.exts)
             }
         }
         applyAndroid(project)
