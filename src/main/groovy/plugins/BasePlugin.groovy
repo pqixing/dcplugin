@@ -13,6 +13,7 @@ abstract class BasePlugin implements Plugin<Project> {
     @Override
     void apply(Project project) {
         addProjectExt(project)
+
         project.repositories {
             maven {
                 url VersionUtils.getMavenUrl(project.exts)

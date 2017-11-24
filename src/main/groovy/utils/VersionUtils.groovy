@@ -6,12 +6,16 @@ import org.gradle.api.Project
  */
 class VersionUtils{
 
+    static void initProject(Project project){
+        project.maven_userName = "admin"
+        project.maven_password = "admin123"
+    }
 
     static def initVersion(Project project){
         def exts = project.exts
         def versions = [
                 runAlone :exts(D.compileSdkVersion,false)
-                ,testMavenEnv :exts(D.testMavenEnv,true)
+                ,testMavenEnv :exts(D.testEnv,true)
                 ,compileSdkVersion :exts(D.compileSdkVersion,"26")
                 ,minSdkVersion:exts(D.minSdkVersion,"16")
                 ,targetSdkVersion:exts(D.targetSdkVersion,"21")
@@ -27,7 +31,7 @@ class VersionUtils{
 
     static String getMavenUrl(def exts){
         String maven = exts(D.maven_url,null)
-        if(maven==null) maven = exts(D.testMavenEnv,true)?D.maven_test:D.maven
+        if(maven==null) maven = exts(D.testEnv,true)?D.maven_url_test:D.maven_url_release
         return maven
     }
 /**
@@ -51,7 +55,7 @@ class VersionUtils{
 
         def tepmletStr = Templet.androidTemplet
         if(flavors) tepmletStr = tepmletStr.replace('//productFlavorsPosition',Templet.productFlavors)
-        if(project.exts(D.mavenEnable,false)) tepmletStr = tepmletStr.replace('//mavenTemplet',Templet.mavenTemplet)
+        if(project.exts(D.uploadEnable,false)) tepmletStr = tepmletStr.replace('//mavenTemplet',Templet.mavenTemplet)
 
         tepmletStr = VersionUtils.updateVersions(project, tepmletStr)
 
