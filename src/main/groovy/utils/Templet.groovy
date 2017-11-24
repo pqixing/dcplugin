@@ -29,11 +29,23 @@ android {
     }
     
     //productFlavorsPosition
+    
+    //sourceSet
 
 }
-
     //mavenTemplet
         '''
+    }
+
+    static String getSourceSet(){
+        return '''
+ sourceSets {
+        //在main目录中
+        main {
+            java.srcDirs += "#outDir"
+        }
+    }
+'''
     }
 
     static String getMavenTemplet(){
@@ -101,6 +113,56 @@ uploadArchives{
         }
         //channelEnd----
     }
+'''
+    }
+
+
+    static String getApplicationTemplet(){
+        return '''
+package #packageName;
+
+import android.app.Application;
+
+/**
+ * Created by pqixing on 17-11-24.
+ */
+
+public class DefaultAppCation extends Application {
+
+    @Override
+    public void onCreate() {
+        super.onCreate();
+        //ApplicationLike.onCreate();
+    }
+}
+'''
+    }
+
+    static String getManifestMeta(){
+        return '''
+<manifest xmlns:android="http://schemas.android.com/apk/res/android"
+    package="#packageName"
+    android:versionCode="#versionCode"
+    android:versionName="#versionName"
+    >
+'''
+    }
+
+    static String getManifestApplicaion(){
+        return '''
+   <application
+        android:allowBackup="true"
+        android:name="#packageName.DefaultAppCation"
+        android:icon="#app_icon"
+        android:label="#app_name"
+        android:theme="#app_theme"
+        >
+        <activity android:name="#luanchActivity">
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
+                <category android:name="android.intent.category.LAUNCHER" />
+            </intent-filter>
+        </activity>
 '''
     }
 }

@@ -13,6 +13,9 @@ abstract class BasePlugin implements Plugin<Project> {
     @Override
     void apply(Project project) {
         addProjectExt(project)
+        boolean islibrary = isLibraryPlugin()
+        project.ext.isLibrary = islibrary
+        VersionUtils.initProject(project)
 
         project.repositories {
             maven {
@@ -21,7 +24,7 @@ abstract class BasePlugin implements Plugin<Project> {
         }
         applyAndroid(project)
     }
-
+    abstract boolean isLibraryPlugin()
     abstract void applyAndroid(Project project)
 /**
  * 添加获取ext属性的方法

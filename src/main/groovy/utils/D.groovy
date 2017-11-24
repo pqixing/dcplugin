@@ -6,6 +6,7 @@ class D{
     static final String compileSdkVersion ="compileSdkVersion"
     static final String minSdkVersion ="minSdkVersion"
     static final String targetSdkVersion ="targetSdkVersion"
+
     static final String versionCode ="versionCode"
     static final String versionName ="versionName"
 
@@ -17,12 +18,24 @@ class D{
 
 
     //自定义字段
+    static final String uploadEnable ="uploadEnable"
+    static final String flavorsEnable ="flavorsEnable"
+
     static final String testEnv ="testEnv"
+    static final String printLog ="printLog"
+
+    //作为app单独运行，必须是library才成效
     static final String asApp ="asApp"
 
-    static final String uploadEnable ="uploadEnable"
+    static final String applicationLike ="applicationLike"
+    static final String luanchActivity ="luanchActivity"
+    static final String app_icon ="app_icon"
+    static final String app_name ="app_name"
+    static final String app_theme ="app_theme"
 
-    static final String printLog ="printLog"
+
+    //输出目录
+    static final String outDir ="outDir"
 
     static final maven_url_test = "http://192.168.3.7:9527/nexus/content/repositories/android-test/"
     static final maven_url_release = "http://192.168.3.7:9527/nexus/content/repositories/android/"

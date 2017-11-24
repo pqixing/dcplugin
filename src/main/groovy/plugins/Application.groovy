@@ -14,9 +14,14 @@ class Application extends BasePlugin {
     }
 
     @Override
+    boolean isLibraryPlugin() {
+        return false
+    }
+
+    @Override
     void applyAndroid(Project project) {
         project.apply plugin: 'com.android.application'
-        project.apply from : VersionUtils.getAndriodTemp(project,true)
+        project.apply from : VersionUtils.generatorGradle(project)
     }
 
 }
