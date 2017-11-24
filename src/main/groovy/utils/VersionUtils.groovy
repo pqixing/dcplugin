@@ -18,7 +18,7 @@ class VersionUtils {
     static void initProject(Project project) {
         project.ext.maven_userName = "admin"
         project.ext.maven_password = "admin123"
-        project.ext.defaultDir = getUrl(project.buildDir.path, "outputs", "dachen")
+        project.ext.defaultDir = getUrl(project.projectDir.path,"src", "dachen","outputs")
         project.ext.packageName = "com.dachen.$project.name"
     }
     //创建Applicaiton类
