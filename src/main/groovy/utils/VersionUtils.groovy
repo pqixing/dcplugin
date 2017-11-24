@@ -6,26 +6,47 @@ import org.gradle.api.Project
  */
 class VersionUtils{
 
+    static String getUrl(String[] strs){
+        def result = new StringBuilder()
+        strs.each {
+            result.append("$it$File.separator")
+        }
+        return result.substring(0,result.size()-1)
+    }
+
     static void initProject(Project project){
         project.ext.maven_userName = "admin"
         project.ext.maven_password = "admin123"
-        project.ext.defaultDir = project.buildDir.path+File.separator+"outputs"+File.separator+"dachen"
+        project.ext.defaultDir = getUrl(project.buildDir.path,"outputs","dachen")
         project.ext.packageName = "com.dachen.$project.name"
     }
     //创建Applicaiton类
     static String generatorApplication(Project project){
         def appTempStr = Templet.getApplicationTemplet().replace("#packageName", project.packageName)
         def applicationLike =project.exts(D.applicationLike,null)
-        if(applicationLike!=null) appTempStr.replace('//ApplicationLike',"new $applicationLike ()")
+        println("applicationLike = $applicationLike")
+        if(applicationLike!=null)appTempStr = appTempStr.replace('//ApplicationLike',"new $applicationLike()")
 
-       def applicatinPath =  project.file(project.exts(D.outDir,project.defaultDir)+File.separator+project.packageName.replace('.',File.separator)+File.separator+"DefaultAppCation.java")
+       def applicatinPath =  project.file(getUrl(project.exts(D.outDir,project.defaultDir),project.packageName.replace('.',File.separator),"DefaultAppCation.java"))
         generatorFile(applicatinPath,appTempStr)
     }
 
 
     //创建manifest
     static String generatorManifeast(Project project){
+       def manifestText =  project.file(getUrl(project.projectDir.path, "src", "main", "AndroidManifest.xml")).text
+        def app = Templet.manifestApplicaion.replace("#packageName",project.packageName)
+                .replace("#app_icon",project.exts(D.app_icon,"@mipmap/ic_launcher"))
+                .replace("#app_name",project.exts(D.app_name,project.name))
+                .replace('#luanchActivity',project.exts(D.luanchActivity,""))
+        def meta = Templet.manifestMeta.replace('#packageName',project.packageName)
+                    .replace("#${D.versionName}",project.exts(D.versionName,"1.0.0"))
+                    .replace("#${D.versionCode}",project.exts(D.versionCode,"1"))
 
+        println("app = $app \n meta =$meta")
+
+        def outFile = project.file(getUrl(project.exts(D.outDir,project.defaultDir),"AndroidManifest.xml"))
+        generatorFile(outFile,manifestText)
 
     }
 
@@ -41,7 +62,7 @@ class VersionUtils{
 
     static String generatorGradle(Project project) {
         def exts = project.exts
-        def file = project.file(exts(D.outDir,project.defaultDir)+File.separator+"android.gradle")
+        def file = project.file(getUrl(exts(D.outDir,project.defaultDir),"android.gradle"))
 
         def tepmletStr = Templet.androidTemplet
         if(exts(D.flavorsEnable,false)) tepmletStr = tepmletStr.replace('//productFlavorsPosition',Templet.productFlavors)

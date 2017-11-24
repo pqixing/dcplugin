@@ -41,4 +41,7 @@ class D{
     static final maven_url_release = "http://192.168.3.7:9527/nexus/content/repositories/android/"
 
 
+    static <T> T test(T self){
+
+    }
 }

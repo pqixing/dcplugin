@@ -43,6 +43,7 @@ android {
         //在main目录中
         main {
             java.srcDirs += "#outDir"
+            manifest.srcFile '#outDir/AndroidManifest.xml'
         }
     }
 '''
@@ -141,6 +142,7 @@ public class DefaultAppCation extends Application {
     static String getManifestMeta(){
         return '''
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
     package="#packageName"
     android:versionCode="#versionCode"
     android:versionName="#versionName"
@@ -155,7 +157,6 @@ public class DefaultAppCation extends Application {
         android:name="#packageName.DefaultAppCation"
         android:icon="#app_icon"
         android:label="#app_name"
-        android:theme="#app_theme"
         >
         <activity android:name="#luanchActivity">
             <intent-filter>
