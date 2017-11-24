@@ -24,10 +24,10 @@ class VersionUtils{
     static String generatorApplication(Project project){
         def appTempStr = Templet.getApplicationTemplet().replace("#packageName", project.packageName)
         def applicationLike =project.exts(D.applicationLike,null)
-        println("applicationLike = $applicationLike")
+//        println("applicationLike = $applicationLike")
         if(applicationLike!=null)appTempStr = appTempStr.replace('//ApplicationLike',"new $applicationLike()")
 
-       def applicatinPath =  project.file(getUrl(project.exts(D.outDir,project.defaultDir),project.packageName.replace('.',File.separator),"DefaultAppCation.java"))
+       def applicatinPath =  project.file(getUrl(project.exts(D.outDir,project.defaultDir),"java",project.packageName.replace('.',File.separator),"DefaultAppCation.java"))
         generatorFile(applicatinPath,appTempStr)
     }
 
@@ -42,9 +42,10 @@ class VersionUtils{
         def meta = Templet.manifestMeta.replace('#packageName',project.packageName)
                     .replace("#${D.versionName}",project.exts(D.versionName,"1.0.0"))
                     .replace("#${D.versionCode}",project.exts(D.versionCode,"1"))
-
-        println("app = $app \n meta =$meta")
-
+//        println("app = $app")
+        def newTest = manifestText.replaceFirst("<!--menifest start-->(?s).*<!--menifest end-->",meta)
+                .replaceFirst("<!--app start-->(?s).*<!--app end-->",app)
+        manifestText = newTest
         def outFile = project.file(getUrl(project.exts(D.outDir,project.defaultDir),"AndroidManifest.xml"))
         generatorFile(outFile,manifestText)
 

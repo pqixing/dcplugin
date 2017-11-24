@@ -42,7 +42,7 @@ android {
  sourceSets {
         //在main目录中
         main {
-            java.srcDirs += "#outDir"
+            java.srcDirs += "#outDir/java"
             manifest.srcFile '#outDir/AndroidManifest.xml'
         }
     }
@@ -123,7 +123,7 @@ uploadArchives{
 package #packageName;
 
 import android.app.Application;
-
+import android.util.Log;
 /**
  * Created by pqixing on 17-11-24.
  */
@@ -133,7 +133,8 @@ public class DefaultAppCation extends Application {
     @Override
     public void onCreate() {
         super.onCreate();
-        //ApplicationLike.onCreate();
+        Log.d("DefaultAppCation", "onCreate: ----------");
+        //ApplicationLike.onCreate(this);
     }
 }
 '''
@@ -151,8 +152,7 @@ public class DefaultAppCation extends Application {
     }
 
     static String getManifestApplicaion(){
-        return '''
-   <application
+        return '''<application
         android:allowBackup="true"
         android:name="#packageName.DefaultAppCation"
         android:icon="#app_icon"

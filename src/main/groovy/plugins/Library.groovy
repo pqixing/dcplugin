@@ -20,12 +20,12 @@ class Library extends BasePlugin {
 
     @Override
     void applyAndroid(Project project) {
-       def runAlone = false
-        project.apply plugin: (runAlone?'com.android.application':'com.android.library')
+        def asApp = project.exts(D.asApp,false)
+        project.apply plugin: (asApp?'com.android.application':'com.android.library')
         project.apply from : VersionUtils.generatorGradle(project)
-//        if(project.exts(D.asApp,false)){
+        if(asApp){
             VersionUtils.generatorApplication(project)
             VersionUtils.generatorManifeast(project)
-//        }
+        }
     }
 }
