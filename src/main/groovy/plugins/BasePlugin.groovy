@@ -2,7 +2,7 @@ package plugins
 
 import org.gradle.api.Plugin
 import org.gradle.api.Project
-import utils.VersionUtils
+import utils.*
 
 /**
  * Created by pqixing on 17-11-21.
@@ -36,5 +36,17 @@ abstract class BasePlugin implements Plugin<Project> {
         }
         getExt.delegate = proj
         proj.ext.exts = getExt
+
+        def fromRepo = {key,value = null ->
+            if(value==null) {
+                value = getExt(D.repoVerions, [:])[key]
+            }
+            if(value==null){
+                value = "+"
+            }
+            return "com.dachen.android:$project.name:$value"
+        }
+        fromRepo.delegate = proj
+        proj.ext.fromRepo = fromRepo
     }
 }
