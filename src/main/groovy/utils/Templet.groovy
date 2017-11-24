@@ -141,8 +141,7 @@ public class DefaultAppCation extends Application {
     }
 
     static String getManifestMeta(){
-        return '''
-<manifest xmlns:android="http://schemas.android.com/apk/res/android"
+        return '''<manifest xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     package="#packageName"
     android:versionCode="#versionCode"
