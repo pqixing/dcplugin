@@ -25,6 +25,7 @@ class Library extends BasePlugin {
         project.apply from : VersionUtils.generatorGradle(project)
         if(asApp){
             VersionUtils.generatorApplication(project)
+            VersionUtils.generatorActivity(project)
             VersionUtils.generatorManifeast(project)
         }
     }

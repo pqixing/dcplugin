@@ -37,18 +37,6 @@ android {
         '''
     }
 
-    static String getSourceSet(){
-        return '''
- sourceSets {
-        //在main目录中
-        main {
-            java.srcDirs += "#outDir/java"
-            manifest.srcFile '#outDir/AndroidManifest.xml'
-        }
-    }
-'''
-    }
-
     static String getMavenTemplet(){
         return '''
 apply plugin: "maven"
@@ -150,6 +138,27 @@ public class DefaultAppCation extends Application {
 '''
     }
 
+    static String getActivityTemplet(){
+        return '''
+package #packageName;
+
+import android.app.Activity;
+import android.content.Intent;
+import android.os.Bundle;
+
+public class DefaultActivity extends Activity {
+
+    @Override
+    protected void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        startActivity(new Intent(this,#luanchActivity.class));
+        finish();
+    }
+}
+
+'''
+    }
+
     static String getManifestApplicaion(){
         return '''<application
         android:allowBackup="true"
@@ -157,12 +166,25 @@ public class DefaultAppCation extends Application {
         android:icon="#app_icon"
         android:label="#app_name"
         >
-        <activity android:name="#luanchActivity">
+        <activity android:name="#packageName.DefaultActivity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
+'''
+    }
+
+
+    static String getSourceSet(){
+        return '''
+ sourceSets {
+        //在main目录中
+        main {
+            java.srcDirs += "#outDir/java"
+            manifest.srcFile '#outDir/AndroidManifest.xml'
+        }
+    }
 '''
     }
 }
