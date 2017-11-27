@@ -49,12 +49,12 @@ abstract class BasePlugin implements Plugin<Project> {
 
         def fromRepo = { key, value = null ->
             if (value == null) {
-                value = getExt(D.repoVerions)[key]
+                value = getExt(Configs.repoVerions)[key]
             }
             if (value == null) {
                 value = "+"
             }
-            return "${getExt(Configs.packagePrefix)}.android:$project.name:$value"
+            return "${getExt(Configs.packagePrefix)}.android:$key:$value"
         }
         fromRepo.delegate = proj
         proj.ext.fromRepo = fromRepo
