@@ -1,0 +1,5 @@
+package auto
+class Configs {
+#configKeys
+static def properties = #properties
+}

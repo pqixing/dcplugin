@@ -1,5 +1,6 @@
 package plugins
 
+import auto.Configs
 import org.gradle.api.Project
 import utils.*
 
@@ -20,7 +21,7 @@ class Library extends BasePlugin {
 
     @Override
     void applyAndroid(Project project) {
-        def asApp = project.exts(D.asApp,false)
+        def asApp = project.exts(Configs.asApp)
         project.apply plugin: (asApp?'com.android.application':'com.android.library')
         project.apply from : VersionUtils.generatorGradle(project)
         if(asApp){

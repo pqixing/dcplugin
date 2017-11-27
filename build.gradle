@@ -1,3 +1,16 @@
+def outTemplet = file("src/main/resources/templets/Configs.txt").text
+def out = file("src/main/groovy/auto/Configs.groovy")
+
+def proTemplet = new Properties()
+proTemplet.load(file("src/main/resources/templets/configs.properties").newInputStream())
+def keys = new StringBuilder()
+proTemplet.keySet().each {
+    keys.append("    static final $it = \"$it\" \n")
+}
+
+out.parentFile.mkdirs()
+out.write(outTemplet.replace("#configKeys",keys).replace("#properties",proTemplet.toMapString()))
+
 // 应用插件
 apply plugin: "groovy"
 apply plugin: "maven"

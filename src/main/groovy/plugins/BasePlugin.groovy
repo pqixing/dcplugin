@@ -1,5 +1,6 @@
 package plugins
 
+import auto.Configs
 import org.gradle.api.Plugin
 import org.gradle.api.Project
 import utils.*
@@ -12,10 +13,10 @@ abstract class BasePlugin implements Plugin<Project> {
 
     @Override
     void apply(Project project) {
+        VersionUtils.initProject(project)
         addProjectExt(project)
         boolean islibrary = isLibraryPlugin()
         project.ext.isLibrary = islibrary
-        VersionUtils.initProject(project)
 
         project.repositories {
             maven {
@@ -24,27 +25,32 @@ abstract class BasePlugin implements Plugin<Project> {
         }
         applyAndroid(project)
     }
+
     abstract boolean isLibraryPlugin()
+
     abstract void applyAndroid(Project project)
 /**
  * 添加获取ext属性的方法
  * @param proj
  */
-    void addProjectExt(Project proj){
-        def getExt = { key,value = null ->
-            return project.hasProperty(key)?project.ext.get(key):value
+    void addProjectExt(Project proj) {
+        def getExt = { key, value = null ->
+            if (project.hasProperty(key)) return project.ext.get(key)
+            else if (project.defConfigs[key]!=null) return project.defConfigs[key]
+            else return value
         }
+
         getExt.delegate = proj
         proj.ext.exts = getExt
 
-        def fromRepo = {key,value = null ->
-            if(value==null) {
-                value = getExt(D.repoVerions, [:])[key]
+        def fromRepo = { key, value = null ->
+            if (value == null) {
+                value = getExt(D.repoVerions)[key]
             }
-            if(value==null){
+            if (value == null) {
                 value = "+"
             }
-            return "com.dachen.android:$project.name:$value"
+            return "${getExt(Configs.packagePrefix)}.android:$project.name:$value"
         }
         fromRepo.delegate = proj
         proj.ext.fromRepo = fromRepo
