@@ -24,7 +24,6 @@ class VersionUtils {
                 defConfigs[map.key] = map.value
             }
         }
-        println("defConfigs = $defConfigs")
         project.ext.defConfigs = defConfigs
     }
 
@@ -68,7 +67,12 @@ class VersionUtils {
 
     static void generatorFile(File file, String data) {
         if (file.exists()) file.delete()
-        file.write(data)
+        file.parentFile.mkdirs()
+        file.parentFile.mkdirs()
+        BufferedOutputStream out = file.newOutputStream()
+        out.write(data.getBytes())
+        out.flush()
+        out.close()
     }
 
 
@@ -99,8 +103,8 @@ class VersionUtils {
     }
 
     static String getMavenUrl(def exts) {
-        String maven = exts(Configs.maven_url, null)
-        if (maven == null) maven = exts(Configs.testEnv, true) ? Configs.maven_url_test : Configs.maven_url_release
+        String maven = exts(Configs.maven_url)
+        if (maven == null) maven = Configs.properties["release"==exts(Configs.env) ? Configs.maven_url_release:  Configs.maven_url_test]
         return maven
     }
 /**
@@ -110,8 +114,9 @@ class VersionUtils {
  * @return
  */
     static String updateGradleProperties(Project project, String source) {
+        def exts = project.exts
         getProperties(project).findAll { map ->
-            source = source.replace("#${map.key}", map.value.toString())
+            source = source.replace("#${map.key}", exts(map.key))
         }
         return source
     }

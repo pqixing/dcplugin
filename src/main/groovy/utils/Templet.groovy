@@ -45,7 +45,7 @@ uploadArchives{
     repositories{
         mavenDeployer{
             repository(url:"#maven_url"){
-                authentication(userName: "${project.exts('maven_userName')}", password: "${project.exts('maven_userName')}")
+                authentication(userName: "${project.exts('maven_userName')}", password: "${project.exts('maven_password')}")
             }
             pom.groupId = 'com.dachen.android' // 组名
             pom.artifactId = '#artifactId' // 插件名

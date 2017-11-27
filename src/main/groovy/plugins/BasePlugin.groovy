@@ -15,12 +15,16 @@ abstract class BasePlugin implements Plugin<Project> {
     void apply(Project project) {
         VersionUtils.initProject(project)
         addProjectExt(project)
+
+        def mUrl = VersionUtils.getMavenUrl(project.exts)
+        project.defConfigs[auto.Configs.maven_url] = mUrl
         boolean islibrary = isLibraryPlugin()
+
         project.ext.isLibrary = islibrary
 
         project.repositories {
             maven {
-                url VersionUtils.getMavenUrl(project.exts)
+                url mUrl
             }
         }
         applyAndroid(project)
