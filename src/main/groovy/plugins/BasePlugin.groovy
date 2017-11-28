@@ -49,7 +49,7 @@ abstract class BasePlugin implements Plugin<Project> {
 
         def fromRepo = { key, value = null ->
             if (value == null) {
-                value = getExt(Configs.repoVerions)[key]
+                value = getExt(Configs.repoVersions)[key]
             }
             if (value == null) {
                 value = "+"
