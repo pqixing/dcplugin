@@ -47,7 +47,7 @@ uploadArchives{
             repository(url:"#maven_url"){
                 authentication(userName: "${project.exts('maven_userName')}", password: "${project.exts('maven_password')}")
             }
-            pom.groupId = 'com.dachen.android' // 组名
+            pom.groupId = '#groupName.android' // 组名
             pom.artifactId = '#artifactId' // 插件名
             pom.version = '#pom_version' // 版本号
         }
@@ -165,6 +165,7 @@ public class DefaultActivity extends Activity {
         android:name="#packageName.DefaultAppCation"
         android:icon="#app_icon"
         android:label="#app_name"
+        #app_theme
         >
         <activity android:name="#packageName.DefaultActivity">
             <intent-filter>
