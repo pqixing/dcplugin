@@ -151,7 +151,7 @@ public class DefaultActivity extends Activity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        startActivity(new Intent(this,#luanchActivity.class));
+        startActivity(new Intent(this,#launchActivity.class));
         finish();
     }
 }
