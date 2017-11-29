@@ -19,6 +19,11 @@ abstract class BasePlugin implements Plugin<Project> {
         VersionUtils.checkProperties(project)
 
         applyAndroid(project)
+
+//        project.task printTree(type:DependencyReportTask){
+//
+//        }
+
     }
 
     abstract boolean isLibraryPlugin()

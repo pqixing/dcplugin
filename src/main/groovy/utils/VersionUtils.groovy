@@ -146,7 +146,11 @@ class VersionUtils {
 
         def tepmletStr = Templet.androidTemplet
         if (exts(Configs.flavorsEnable)) tepmletStr = tepmletStr.replace('//productFlavorsPosition', Templet.productFlavors)
-        if (exts(Configs.uploadEnable)) tepmletStr = tepmletStr.replace('//mavenTemplet', Templet.mavenTemplet)
+
+        //是否允许上传到仓库
+        def uploadEnable = exts(Configs.uploadEnable)&&(exts(Configs.env)!="release"||(Configs.dc_module.contains(project.name)&&exts(Configs.maven_dc_key)=="dc_release"))
+
+        if (uploadEnable) tepmletStr = tepmletStr.replace('//mavenTemplet', Templet.mavenTemplet)
         if (project.isLibrary && exts(Configs.asApp)) tepmletStr = tepmletStr.replace('  //sourceSet', Templet.sourceSet).replace("#outDir", exts(Configs.outDir))
         tepmletStr = VersionUtils.updateGradleProperties(project, tepmletStr)
         generatorFile(file, tepmletStr)
