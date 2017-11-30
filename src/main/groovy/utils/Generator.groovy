@@ -1,6 +1,7 @@
 package utils
 
 import auto.Configs
+import auto.TP
 import org.gradle.api.Project
 
 class Generator {
@@ -10,7 +11,6 @@ class Generator {
      * @param data
      */
     static String write(File file, String data) {
-        if (CheckUtils.isNull(file)) return ""
         if (file.exists()) file.delete()
         file.parentFile.mkdirs()
         BufferedOutputStream out = file.newOutputStream()
@@ -20,17 +20,87 @@ class Generator {
         return file.path
     }
 
-/**
- * 输出配置文件信息，返回输出路径
- * @param project
- * @return
- */
+    /**
+     * 输出AndroidGradle文件
+     * @param project
+     * @return
+     */
+    static String writeAndroidGradle(Project project) {
+        def exts = project.exts
+        def gradleStr = TP.androidGradle
+        gradleStr = ProUtils.replaceKey(project, gradleStr, Configs.flavorsEnable, exts(Configs.flavorsEnable) ? TP.flavors : "")
+        gradleStr = ProUtils.replaceKey(project, gradleStr, "sourceSetEnable", !project.app && exts(Configs.asApp) ? TP.sourceSet : "")
+        gradleStr = ProUtils.replaceKey(project, gradleStr, Configs.uploadEnable, CheckUtils.isUploadAble(project) ? TP.maven : "")
+
+        return write(new File(exts(Configs.outDir), "androidConfigs.gradle"), ProUtils.replaceAllKey(project, gradleStr))
+    }
+    /**
+     * 创建清单文件
+     * @param project
+     * @return
+     */
+    static String writeManifest(Project project) {
+        def inputManifest = new File(MethodUtils.getUrl(project.projectDir.path, "src", "main"), "AndroidManifest.xml").text
+        def result = inputManifest.replaceFirst("<manifest(?s).*?>", ProUtils.replaceAllKey(project, TP.manifestMeta))
+                .replaceFirst("<application(?s).*?>", ProUtils.replaceAllKey(project, TP.manifestApp))
+        return write(new File(project.exts(Configs.outDir), "AndroidManifest.xml"), result)
+    }
+    /**
+     * 创建Applicaiton类
+     * @param project
+     * @return
+     */
+    static String writeApplication(Project project) {
+        def exts = project.exts
+        def dirPath = MethodUtils.getUrl(exts(Configs.outDir), "java", exts(Configs.packageName).replace('.', File.separator))
+        return write(new File(dirPath, "DefaultAppCation.java"), ProUtils.replaceAllKey(project, TP.application))
+    }
+    /**
+     * 创建Activity类
+     * @param project
+     * @return
+     */
+    static String writeActivity(Project project) {
+        def exts = project.exts
+        def dirPath = MethodUtils.getUrl(exts(Configs.outDir), "java", exts(Configs.packageName).replace('.', File.separator))
+        return write(new File(dirPath, "DefaultActivity.java"), ProUtils.replaceAllKey(project, TP.activity))
+    }
+    /**
+     * 输出依赖关系
+     * @param project
+     * @return
+     */
+    static void writeDependeny(Project project) {
+        project.task("DependencyReport", type: org.gradle.api.tasks.diagnostics.DependencyReportTask) {
+            group = "android"
+            outputFile = project.file(project.exts(Configs.outDir) + File.separator + "DependencyReport.txt")
+            doLast {
+                def strList = new LinkedList<String>()
+                outputFile.eachLine {
+                    if (it.startsWith("No dependencies")) {
+                        strList.removeLast()
+                        strList.removeLast()
+                    } else {
+                        strList.add(it + "\n")
+                    }
+                }
+                write(outputFile, strList.toString())
+            }
+        }
+        project.DependencyReport.execute()
+    }
+
+    /**
+     * 输出配置文件信息，返回输出路径
+     * @param project
+     * @return
+     */
     static String writeConfigs(Project project) {
         def exts = project.exts
         def configsFile = project.file(exts(Configs.outDir) + File.separator + "configs.txt")
 
         def configsStr = new StringBuilder()
-        Configs.properties.keySet().sort { it.key }.each { key ->
+        Configs.properties.keySet().sort { it }.each { key ->
             configsStr.append("$key : ${key.startsWith('s_') ? 'Not Public Properties!!!' : exts(key)} \n")
         }
         configsStr.append("--------------------------------android configs--------------------------------\n")

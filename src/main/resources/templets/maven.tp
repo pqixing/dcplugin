@@ -1,0 +1,14 @@
+apply plugin: "maven"
+// 上传到本地代码库
+uploadArchives{
+    repositories{
+        mavenDeployer{
+            repository(url:"${project.exts('s_mv_url')}"){
+                authentication(userName: "${project.exts('s_mv_userName')}", password: "${project.exts('s_mv_password')}")
+            }
+            pom.groupId = '#groupName.android' // 组名
+            pom.artifactId = '#artifactId' // 插件名
+            pom.version = '#pom_version' // 版本号
+        }
+    }
+}

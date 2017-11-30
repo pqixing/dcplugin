@@ -39,4 +39,12 @@ class MethodUtils {
         fromRepo.delegate = p
         p.ext.fromRepo = fromRepo
     }
+
+    static String getUrl(String[] strs) {
+        def result = new StringBuilder()
+        strs.each {
+            result.append("$it$File.separator")
+        }
+        return result.substring(0, result.size() - 1)
+    }
 }

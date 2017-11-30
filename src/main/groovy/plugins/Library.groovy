@@ -2,7 +2,7 @@ package plugins
 
 import auto.Configs
 import org.gradle.api.Project
-import utils.*
+import utils.Generator
 
 /**
  * Created by pqixing on 17-11-21.
@@ -16,19 +16,12 @@ class Library extends BasePlugin {
     }
 
     @Override
-    boolean isLibraryPlugin() {
-        return true
-    }
-
-    @Override
-    void applyAndroid(Project project) {
+    void applyForChildren(Project project) {
         def asApp = project.exts(Configs.asApp)
-        project.apply plugin: (asApp?'com.android.application':'com.android.library')
-        project.apply from : VersionUtils.generatorGradle(project)
-        if(asApp){
-            VersionUtils.generatorApplication(project)
-            VersionUtils.generatorActivity(project)
-            VersionUtils.generatorManifeast(project)
+        if (asApp) {
+            Generator.writeApplication(project)
+            Generator.writeActivity(project)
+            Generator.writeManifest(project)
         }
     }
 }

@@ -25,8 +25,8 @@ class ProUtils {
         pros[Configs.plugin_type] = project.app||pros[Configs.asApp]?"application":"library"
 
         pros.each { map ->
-            if (map.value != null || map.value.toString().contains("#")) {
-                map.value = map.value.replace("#projectDir", project.projectDir.path)
+            if (!CheckUtils.isNull(map.value)|| map.value.toString().contains("#")) {
+                map.value = map.value.toString().replace("#projectDir", project.projectDir.path)
                         .replace("#groupName", pros[Configs.groupName])
                         .replace("#projectName", project.name)
             }
@@ -64,8 +64,9 @@ class ProUtils {
         if ("def" == value) value = p.exts(key)
         def builder = new StringBuilder()
         source.eachLine { s ->
-            if (CheckUtils.isNull(value) && s.contains("#1$key")) return
-            builder.append(s.replaceAll("#.?$key", String.valueOf(value))).append("\n")//替换#（任意）key
+            if (CheckUtils.isNull(String.valueOf(value)) && s.contains("#1$key")) return
+            if(CheckUtils.isNull(s)) return
+            builder.append(s.replace("#$key", String.valueOf(value)).replace("#1$key",String.valueOf(value))).append("\n")//替换#（任意）key
         }
         return builder.toString()
     }
