@@ -1,41 +1,52 @@
-def outTemplet = file("src/main/resources/templets/Configs.txt").text
-def out = file("src/main/groovy/auto/Configs.groovy")
+def inputDir = file("src/main/resources/templets/")
+def outputDir = file("src/main/groovy/auto/")
+outputDir.mkdirs()
 
-def proTemplet = new Properties()
-proTemplet.load(file("src/main/resources/templets/configs.properties").newInputStream())
+//输出Configs类
+def configTemplet = new File(inputDir, "Configs.txt").text
+def pros = new Properties()
+pros.load(new File(inputDir,"configs.properties").newInputStream())
+
 def keys = new StringBuilder()
-proTemplet.keySet().each {
+pros.keySet().each {
     keys.append("    static final $it = \"$it\" \n")
 }
+new File(outputDir,"Configs.groovy").write(configTemplet.replace("#configKeys", keys).replace("#properties", pros.toMapString()))
 
-out.parentFile.mkdirs()
-out.write(outTemplet.replace("#configKeys",keys).replace("#properties",proTemplet.toMapString()))
+def tps = new StringBuilder()
+//输出模板文章
+inputDir.listFiles().findAll { it.name.endsWith(".tp") }.each { f ->
+    tps.append("\n    static final ${f.name.replace(".tp","")} = \n'''${f.text}''' \n")
+}
+
+new File(outputDir,"TP.groovy").write(new File(inputDir,"TP.txt").text.replace("#tp",tps.toString()))
+
 
 // 应用插件
 apply plugin: "groovy"
 apply plugin: "maven"
 
 // 添加依赖
-dependencies{
+dependencies {
     compile gradleApi()
     compile localGroovy()
 }
 
 // 代码仓库
-repositories{
+repositories {
     jcenter()
 }
 
 // 上传到本地代码库
-uploadArchives{
-    repositories{
-        mavenDeployer{
-            repository(url:"http://192.168.3.7:9527/nexus/content/repositories/android/"){
+uploadArchives {
+    repositories {
+        mavenDeployer {
+            repository(url: uri("/home/pqixing/.repo")) {
                 authentication(userName: "admin", password: "admin123")
             }
             pom.groupId = 'com.dachen.android' // 组名
             pom.artifactId = 'plugin' // 插件名
-            pom.version = '0.0.8' // 版本号
+            pom.version = '0.0.8.2.4' // 版本号
         }
     }
 }

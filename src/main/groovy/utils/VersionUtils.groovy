@@ -93,7 +93,7 @@ class VersionUtils {
         def appTempStr = Templet.applicationTemplet.replace("#packageName", exts(Configs.packageName))
         def applicationLike = exts(Configs.applicationLike)
 //        println("applicationLike = $applicationLike")
-        if (applicationLike != null) appTempStr = appTempStr.replace('//ApplicationLike', "new $applicationLike()")
+        if (applicationLike != null&&applicationLike!="") appTempStr = appTempStr.replace('//ApplicationLike', "new $applicationLike()")
 
         def applicatinPath = project.file(getUrl(exts(Configs.outDir), "java", exts(Configs.packageName).replace('.', File.separator), "DefaultAppCation.java"))
         generatorFile(applicatinPath, appTempStr)
@@ -138,7 +138,13 @@ class VersionUtils {
         out.flush()
         out.close()
     }
-
+    static String generatorBuildScript(Project project) {
+        def exts = project.exts
+        def file = project.file(getUrl(exts(Configs.outDir), "androiBuildScript.gradle"))
+        def script = Templet.buildScripTemple.replace("#gradle_version",project.exts(Configs.gradle_version))
+        generatorFile(file, script)
+        return file.absolutePath
+    }
 
     static String generatorGradle(Project project) {
         def exts = project.exts

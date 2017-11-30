@@ -4,8 +4,8 @@ import auto.Configs
 import org.gradle.api.Plugin
 import org.gradle.api.Project
 import tasks.GeneratorReport
+import utils.ProUtils
 import utils.VersionUtils
-
 /**
  * Created by pqixing on 17-11-21.
  */
@@ -16,9 +16,12 @@ abstract class BasePlugin implements Plugin<Project> {
     void apply(Project project) {
         boolean islibrary = isLibraryPlugin()
         project.ext.isLibrary = islibrary
+        ProUtils.initProperties(project)
 
         VersionUtils.initProject(project)
         VersionUtils.checkProperties(project)
+
+//        project.apply from : VersionUtils.generatorBuildScript(project)
 
         applyAndroid(project)
         project.afterEvaluate {

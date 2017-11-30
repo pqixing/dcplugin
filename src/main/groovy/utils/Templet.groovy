@@ -5,6 +5,20 @@ package utils
 
 class Templet {
 
+    static String getBuildScripTemple(){
+        return '''
+buildscript {
+
+    repositories {
+       google()
+    }
+    dependencies {
+       classpath "com.android.tools.build:gradle:#gradle_version"
+    }
+}
+'''
+    }
+
 /**
  * 返回默认的gradle文件
  * @return

@@ -11,6 +11,7 @@ import utils.*
 class Library extends BasePlugin {
     @Override
     void apply(Project project) {
+        project.ext.app = false
         super.apply(project)
     }
 

@@ -1,0 +1,13 @@
+<application
+        android:allowBackup="true"
+        android:name="#packageName.DefaultAppCation"
+        android:icon="#app_icon"
+        android:label="#app_name"
+        android:theme="#1app_theme"
+        >
+        <activity android:name="#packageName.DefaultActivity">
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
+                <category android:name="android.intent.category.LAUNCHER" />
+            </intent-filter>
+        </activity>

@@ -1,0 +1,29 @@
+buildscript {
+    repositories {
+       jcenter()
+       google()
+    }
+    dependencies {
+       classpath "com.android.tools.build:gradle:#gradle_version"
+    }
+}
+
+apply plugin: 'com.android.#plugin_type'
+
+android {
+    compileSdkVersion #compileSdkVersion
+    defaultConfig {
+        applicationId #1applicationId
+        minSdkVersion #minSdkVersion
+        targetSdkVersion #targetSdkVersion
+
+        testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
+        manifestPlaceholders = [CHANNEL_NAME: "DACHEN_DOCTOR"]
+    }
+
+    #flavorsEnable
+
+    #sourceSetEnable
+
+}
+    #uploadEnable

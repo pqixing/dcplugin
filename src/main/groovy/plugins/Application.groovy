@@ -10,6 +10,7 @@ import utils.*
 class Application extends BasePlugin {
     @Override
     void apply(Project project) {
+        project.ext.app = true
         super.apply(project)
     }
 
