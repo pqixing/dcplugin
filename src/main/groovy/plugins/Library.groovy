@@ -17,8 +17,7 @@ class Library extends BasePlugin {
 
     @Override
     void applyForChildren(Project project) {
-        def asApp = project.exts(Configs.asApp)
-        if (asApp) {
+        if (project.exts(Configs.asApp)==true) {
             Generator.writeApplication(project)
             Generator.writeActivity(project)
             Generator.writeManifest(project)
