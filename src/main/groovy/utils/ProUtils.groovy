@@ -35,6 +35,11 @@ class ProUtils {
             pros[Configs.s_mv_url] = "release" == pros[Configs.env] ? pros[Configs.s_mv_release] : pros[Configs.s_mv_test]
         }
         pros[Configs.plugin_type] = project.app || pros[Configs.asApp] == true ? "application" : "library"
+        //如果应用的是library,不需要配置appid
+        if("library" == pros[Configs.plugin_type]) {
+            pros[Configs.applicationId] = ""
+            project.ext."$Configs.applicationId" = ""
+        }
 
         pros.each { map ->
             if (!CheckUtils.isNull(map.value) || map.value.toString().contains("#")) {
