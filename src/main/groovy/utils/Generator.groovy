@@ -71,9 +71,9 @@ class Generator {
      * @return
      */
     static void writeDependeny(Project project) {
-        project.task("DependencyReport", type: org.gradle.api.tasks.diagnostics.DependencyReportTask) {
+        project.task("dependency", type: org.gradle.api.tasks.diagnostics.DependencyReportTask) {
             group = "android"
-            outputFile = project.file(project.exts(Configs.outDir) + File.separator + "DependencyReport.txt")
+            outputFile = project.file(project.exts(Configs.outDir) + File.separator + "dependency.txt")
             doLast {
                 def strList = new LinkedList<String>()
                 outputFile.eachLine {
@@ -87,7 +87,7 @@ class Generator {
                 write(outputFile, strList.toString())
             }
         }
-        project.DependencyReport.execute()
+        project.dependency.execute()
     }
 
     /**
@@ -97,7 +97,7 @@ class Generator {
      */
     static String writeConfigs(Project project) {
         def exts = project.exts
-        def configsFile = project.file(exts(Configs.outDir) + File.separator + "configs.txt")
+        def configsFile = project.file(exts(Configs.outDir) + File.separator + "config.txt")
 
         def configsStr = new StringBuilder()
         Configs.properties.keySet().sort { it }.each { key ->

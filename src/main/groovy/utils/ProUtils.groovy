@@ -8,24 +8,36 @@ import org.gradle.api.Project
  */
 
 class ProUtils {
-
+    /**
+     * 合并Config.properties属性
+     * @param project
+     */
+    static void mergeProperties(Project project) {
+        def inputProsFile = new File(project.projectDir, "Config.properties")
+        if (!inputProsFile.exists()) return
+        def inputPros = new Properties()
+        inputPros.load(inputProsFile.newInputStream())
+        inputPros.each { map -> project.ext."$map.key" = map.value }
+        inputPros.clear()
+    }
     /**
      * 初始化项目中配置的属性
      * @param project
      */
     static void initProperties(Project project) {
-        def pros =[:]
+        mergeProperties(project)
+        def pros = [:]
         Configs.properties.each { map ->
-            pros[map.key] =project.hasProperty(map.key)?project.ext.get(map.key):map.value
+            pros[map.key] = project.hasProperty(map.key) ? project.ext.get(map.key) : map.value
         }
 
         if (CheckUtils.isNull(pros[Configs.s_mv_url])) {
             pros[Configs.s_mv_url] = "release" == pros[Configs.env] ? pros[Configs.s_mv_release] : pros[Configs.s_mv_test]
         }
-        pros[Configs.plugin_type] = project.app||pros[Configs.asApp]==true?"application":"library"
+        pros[Configs.plugin_type] = project.app || pros[Configs.asApp] == true ? "application" : "library"
 
         pros.each { map ->
-            if (!CheckUtils.isNull(map.value)|| map.value.toString().contains("#")) {
+            if (!CheckUtils.isNull(map.value) || map.value.toString().contains("#")) {
                 map.value = map.value.toString().replace("#projectDir", project.projectDir.path)
                         .replace("#groupName", pros[Configs.groupName])
                         .replace("#projectName", project.name)
@@ -65,13 +77,13 @@ class ProUtils {
         if ("def" == value) value = p.exts(key)
         def builder = new StringBuilder()
         source.eachLine { s ->
-            if(CheckUtils.isNull(s)) return
+            if (CheckUtils.isNull(s)) return
             if (CheckUtils.isNull(String.valueOf(value)) && s.contains("#1$key")) return
-            if(s.contains("#2$key")&&!p.hasProperty(key)) return
+            if (s.contains("#2$key") && !p.hasProperty(key)) return
 
             s = s.replace("#$key", String.valueOf(value))
-                    .replace("#1$key",String.valueOf(value))
-                    .replace("#2$key",String.valueOf(value))
+                    .replace("#1$key", String.valueOf(value))
+                    .replace("#2$key", String.valueOf(value))
 
             builder.append(s).append("\n")//替换#（任意）key
         }
