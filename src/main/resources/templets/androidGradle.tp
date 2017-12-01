@@ -1,21 +1,17 @@
-buildscript {
-    repositories {
-       jcenter()
-       google()
-    }
-    dependencies {
-       classpath "com.android.tools.build:gradle:#gradle_version"
-    }
-}
-
 apply plugin: 'com.android.#plugin_type'
-
+if(exts("kotlinEnable")==true){
+    apply plugin: 'kotlin-android'
+    apply plugin: 'kotlin-android-extensions'
+}
 android {
     compileSdkVersion #compileSdkVersion
     defaultConfig {
-        applicationId #1applicationId
+        applicationId "#1applicationId"
         minSdkVersion #minSdkVersion
         targetSdkVersion #targetSdkVersion
+
+        versionName "#2versionName"
+        versionCode #2versionCode
 
         testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
         manifestPlaceholders = [CHANNEL_NAME: "DACHEN_DOCTOR"]
@@ -26,4 +22,10 @@ android {
     #sourceSetEnable
 
 }
+dependencies {
+    if(exts("kotlinEnable")==true){
+        implementation "org.jetbrains.kotlin:kotlin-stdlib-jre7:${exts('kotlin_version')}"
+    }
+}
+
     #uploadEnable

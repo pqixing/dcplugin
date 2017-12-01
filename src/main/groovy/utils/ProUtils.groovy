@@ -14,15 +14,15 @@ class ProUtils {
      * @param project
      */
     static void initProperties(Project project) {
-        def pros = Configs.properties.clone().findAll { map ->
-            if (project.hasProperty(map.key)) map.value = project.ext.get(map.key)
-            true
+        def pros =[:]
+        Configs.properties.each { map ->
+            pros[map.key] =project.hasProperty(map.key)?project.ext.get(map.key):map.value
         }
 
         if (CheckUtils.isNull(pros[Configs.s_mv_url])) {
             pros[Configs.s_mv_url] = "release" == pros[Configs.env] ? pros[Configs.s_mv_release] : pros[Configs.s_mv_test]
         }
-        pros[Configs.plugin_type] = project.app||pros[Configs.asApp]?"application":"library"
+        pros[Configs.plugin_type] = project.app||pros[Configs.asApp]==true?"application":"library"
 
         pros.each { map ->
             if (!CheckUtils.isNull(map.value)|| map.value.toString().contains("#")) {
@@ -31,7 +31,7 @@ class ProUtils {
                         .replace("#projectName", project.name)
             }
         }
-        println("pros = $pros")
+//        println("pros = $pros")
         project.ext.pros = pros//设置默认参数
 
         MethodUtils.addExts(project)
@@ -54,6 +54,7 @@ class ProUtils {
      * 替换文本中指定属性值的方法
      * #key   普通替换，只替换该字段
      * #1key  单行替换，如果value不为空，普通替换，否则，该行都隐藏
+     * #2key    单行替换，如果用户配置的value不为空，普通替换用户配置的值，否则，该行都隐藏
      * @param p
      * @param source 源文本
      * @param key 属性的key
@@ -64,9 +65,15 @@ class ProUtils {
         if ("def" == value) value = p.exts(key)
         def builder = new StringBuilder()
         source.eachLine { s ->
-            if (CheckUtils.isNull(String.valueOf(value)) && s.contains("#1$key")) return
             if(CheckUtils.isNull(s)) return
-            builder.append(s.replace("#$key", String.valueOf(value)).replace("#1$key",String.valueOf(value))).append("\n")//替换#（任意）key
+            if (CheckUtils.isNull(String.valueOf(value)) && s.contains("#1$key")) return
+            if(s.contains("#2$key")&&!p.hasProperty(key)) return
+
+            s = s.replace("#$key", String.valueOf(value))
+                    .replace("#1$key",String.valueOf(value))
+                    .replace("#2$key",String.valueOf(value))
+
+            builder.append(s).append("\n")//替换#（任意）key
         }
         return builder.toString()
     }

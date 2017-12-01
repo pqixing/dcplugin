@@ -28,8 +28,8 @@ class Generator {
     static String writeAndroidGradle(Project project) {
         def exts = project.exts
         def gradleStr = TP.androidGradle
-        gradleStr = ProUtils.replaceKey(project, gradleStr, Configs.flavorsEnable, exts(Configs.flavorsEnable) ? TP.flavors : "")
-        gradleStr = ProUtils.replaceKey(project, gradleStr, "sourceSetEnable", !project.app && exts(Configs.asApp) ? TP.sourceSet : "")
+        gradleStr = ProUtils.replaceKey(project, gradleStr, Configs.flavorsEnable, exts(Configs.flavorsEnable)==true? TP.flavors : "")
+        gradleStr = ProUtils.replaceKey(project, gradleStr, "sourceSetEnable", !project.app && exts(Configs.asApp)==true ? TP.sourceSet : "")
         gradleStr = ProUtils.replaceKey(project, gradleStr, Configs.uploadEnable, CheckUtils.isUploadAble(project) ? TP.maven : "")
 
         return write(new File(exts(Configs.outDir), "androidConfigs.gradle"), ProUtils.replaceAllKey(project, gradleStr))
@@ -113,7 +113,7 @@ class Generator {
             project.android.applicationVariants.all(variantClosures)
         else project.android.libraryVariants.all(variantClosures)
 
-        println("configsStr = $configsStr")
+//        println("configsStr = $configsStr")
         return write(configsFile, configsStr.toString())
     }
 }

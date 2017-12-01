@@ -10,9 +10,10 @@ class MethodUtils {
      */
     static void addExts(Project p) {
         def exts = { key, value = null ->
-            if (project.hasProperty(key)) return project.ext.get(key)
-            else if (project.pros[key] != null) return project.pros[key]
-            else return value
+            if (project.hasProperty(key)) value = project.ext.get(key)
+            else if (project.pros[key] != null) value = project.pros[key]
+            println("exts $key : $value")
+           value
         }
 
         exts.delegate = p

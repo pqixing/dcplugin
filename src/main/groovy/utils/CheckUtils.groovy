@@ -9,14 +9,14 @@ class CheckUtils {
      * @param p
      * @return
      */
-   static boolean isProsAvaild(Project p) {
+   static boolean checkProperties(Project p) {
         def exts = p.exts
-        if (exts(Configs.uploadEnable)) {
+        if (exts(Configs.uploadEnable)==true) {
             if (isNull(exts(Configs.pom_version))) {
                 throw new RuntimeException("project $p.name uploadEnable is true,you have to set pom_version for library!")
             }
         }
-        if (!p.app && exts(Configs.asApp)) {
+        if (!p.app && exts(Configs.asApp)==true) {
             if (isNull(exts(Configs.launchActivity))) {
                 throw new RuntimeException("project $p.name asApp is true,you have to set launchActivity!")
             }
@@ -27,7 +27,6 @@ class CheckUtils {
     }
 
     static boolean isNull(def obj) {
-
         return null == obj || "" == obj.toString()||"null"==obj.toString()
     }
 
@@ -37,6 +36,6 @@ class CheckUtils {
      * @return
      */
     static boolean isUploadAble(Project project) {
-        return project.exts(Configs.uploadEnable) && ("release" != project.exts(Configs.env) || "dc_release" == project.exts(Configs.s_mv_key))
+        return project.exts(Configs.uploadEnable)==true && ("release" != project.exts(Configs.env) || "dc_release" == project.exts(Configs.s_mv_key))
     }
 }
