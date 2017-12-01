@@ -29,8 +29,8 @@ class MethodUtils {
             key = key.replace(":", "")
 
             if (value == null) {
-                if (project.hasProperty(key)) value = project.ext.get(key)
-                else value = project.pros[key]
+                def repoVersions = p.exts(Configs.repoVersions)
+                if(repoVersions !=null) value = repoVersions[key]
             }
             if (value == null) {
                 value = "+"
