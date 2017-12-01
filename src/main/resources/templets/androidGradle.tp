@@ -4,6 +4,7 @@ if(exts("kotlinEnable")==true){
     apply plugin: 'kotlin-android-extensions'
 }
 android {
+    buildToolsVersion "#buildToolsVersion"
     compileSdkVersion #compileSdkVersion
     defaultConfig {
         applicationId "#1applicationId"
