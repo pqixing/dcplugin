@@ -12,8 +12,7 @@ class MethodUtils {
         def exts = { key, value = null ->
             if (project.hasProperty(key)) value = project.ext.get(key)
             else if (project.pros[key] != null) value = project.pros[key]
-//            println("exts $key : $value")
-           value
+            value
         }
 
         exts.delegate = p
@@ -29,8 +28,13 @@ class MethodUtils {
             key = key.replace(":", "")
 
             if (value == null) {
-                def repoVersions = p.exts(Configs.repoVersions,[:])
-                if(repoVersions instanceof Map) value = repoVersions.get(key)
+                def repos = [:]
+
+                def temp = p.exts(Configs.repoVersions)
+                if(temp instanceof Map) repos.putAll(temp)
+                if(temp instanceof  String)  repos.putAll(new GroovyShell().evaluate(temp))
+
+                value = repos.get(key)
             }
             if (value == null) {
                 value = "+"

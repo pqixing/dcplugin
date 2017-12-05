@@ -1,11 +1,12 @@
- repositories {
-        maven {
-            url "#s_mv_url"
-        }
-    }
+repositories {
+     maven {
+         url "#s_mv_url"
+     }
+}
+
 
 apply plugin: 'com.android.#plugin_type'
-if(exts("kotlinEnable")==true){
+if(exts("kotlinEnable") as boolean ==true){
     apply plugin: 'kotlin-android'
     apply plugin: 'kotlin-android-extensions'
 }
@@ -30,10 +31,10 @@ android {
 
 }
 dependencies {
-    if(exts("kotlinEnable")==true){
+    if(exts("kotlinEnable") as boolean ==true){
         implementation "org.jetbrains.kotlin:kotlin-stdlib-jre7:${exts('kotlin_version')}"
     }
-    if(exts("useDcBase")==true){
+    if(exts("useDcBase") as boolean ==true){
         if("application" == exts("plugin_type")){
             implementation fromRepo(':dcuser')
             implementation fromRepo(':dccommon')
