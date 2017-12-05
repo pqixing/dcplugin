@@ -46,7 +46,7 @@ uploadArchives {
             }
             pom.groupId = 'com.dachen.android' // 组名
             pom.artifactId = 'plugin' // 插件名
-            pom.version = '0.0.9.6' // 版本号
+            pom.version = '0.0.9.9.1' // 版本号
         }
     }
 }

@@ -1,3 +1,9 @@
+ repositories {
+        maven {
+            url "#s_mv_url"
+        }
+    }
+
 apply plugin: 'com.android.#plugin_type'
 if(exts("kotlinEnable")==true){
     apply plugin: 'kotlin-android'
@@ -26,6 +32,17 @@ android {
 dependencies {
     if(exts("kotlinEnable")==true){
         implementation "org.jetbrains.kotlin:kotlin-stdlib-jre7:${exts('kotlin_version')}"
+    }
+    if(exts("useDcBase")==true){
+        if("application" == exts("plugin_type")){
+            implementation fromRepo(':dcuser')
+            implementation fromRepo(':dccommon')
+            implementation fromRepo(':dcnet')
+        }else{
+            compileOnly fromRepo(':dcuser')
+            compileOnly fromRepo(':dccommon')
+            compileOnly fromRepo(':dcnet')
+        }
     }
 }
 

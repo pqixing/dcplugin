@@ -12,7 +12,7 @@ class MethodUtils {
         def exts = { key, value = null ->
             if (project.hasProperty(key)) value = project.ext.get(key)
             else if (project.pros[key] != null) value = project.pros[key]
-            println("exts $key : $value")
+//            println("exts $key : $value")
            value
         }
 
@@ -29,8 +29,8 @@ class MethodUtils {
             key = key.replace(":", "")
 
             if (value == null) {
-                def repoVersions = p.exts(Configs.repoVersions)
-                if(repoVersions !=null) value = repoVersions[key]
+                def repoVersions = p.exts(Configs.repoVersions,[:])
+                if(repoVersions instanceof Map) value = repoVersions.get(key)
             }
             if (value == null) {
                 value = "+"
